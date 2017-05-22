@@ -15,3 +15,39 @@ After having the OpenShift cluster up and running, the EnMasse instance can be d
 Finally, in order to avoid creating addresses using the console UI, you can use the following script which deploys addresses from the _addresses.json_ file in the "scripts" directory.
 
         bash addresses_deploy.sh
+
+## Example Docker image
+
+All the Python examples are provided through a Docker image. Building the image (using the provided Dockerfile) allows you to have a working environment (with the Qpid Proton project installed) with all Python example running.
+
+After building the Docker image (i.e. with name ppatierno/devday:latest), a container can be launched in the following way :
+
+        docker run -it --net=host --name proton_devday ppatierno/devday:latest /bin/bash
+
+The _--net=host_ option is used in order to connect to the host network reaching the OpenShift cluster deployed on that.
+In order to run another console using the same container (i.e. for running clients, server, ....), you can use :
+
+        docker exec -it proton_devday /bin/bash
+
+## Python examples
+
+The demo provides the following Python examples (hacking the original ones from the Qpid Proton project) :
+
+* simple_send.py : it's just the original Qpid Proton simple_send.py
+* forever_recv.py : it's a receiver which connects to an address waiting forever incoming messages
+* server.py : it's a server which connects to the router network (messaging service in EnMasse) listening for requests (incoming messages) and replying with the upper cased body
+* client.py : it's a client which connects to the router network (messaging service in EnMasse) sending some messages to the above server and waiting for the response
+
+Examples :
+
+A sender which sends 10 messages to queue "myqueue" and the related receiver that is listening on that.
+
+        simple_send.py -a amqp://172.30.90.124:5672/myqueue -m 10
+
+        forever_recv.py -a amqp://172.30.90.124:5672/myqueue
+
+A server listening for requests on the "request" address and the related client sending requests on that. The client will specify a "dynamic" link for receiving the responses.
+
+        server.py -u amqp://172.30.90.124:55673 -a request
+
+        client.py -a amqp://172.30.90.124:5672/request
