@@ -1,5 +1,4 @@
-# devday-maas
-DevDay "Messaging as a Service" demo
+# DevDay "Messaging as a Service" demo
 
 ## Prerequisites
 
@@ -40,14 +39,26 @@ The demo provides the following Python examples (hacking the original ones from 
 
 Examples :
 
-A sender which sends 10 messages to queue "myqueue" and the related receiver that is listening on that.
+A sender which sends 10 messages to queue "myqueue" (deployed on a broker) and the related receiver that is listening on that.
 
         simple_send.py -a amqp://172.30.90.124:5672/myqueue -m 10
 
         forever_recv.py -a amqp://172.30.90.124:5672/myqueue
 
-A server listening for requests on the "request" address and the related client sending requests on that. The client will specify a "dynamic" link for receiving the responses.
+A sender which sends 10 messages to address "anycast" (direct messaging) and the related receiver that is listening on that.
+
+        simple_send.py -a amqp://172.30.90.124:5672/anycast -m 10
+
+        forever_recv.py -a amqp://172.30.90.124:5672/anycast
+
+A server listening for requests on the "request" address (direct messaging) and the related client sending requests on that. The client will specify a "dynamic" link for receiving the responses.
 
         server.py -u amqp://172.30.90.124:55673 -a request
 
         client.py -a amqp://172.30.90.124:5672/request
+
+A server listening for requests on the "myqueue" address (a queue deployed on a broker) and the related client sending requests on that. The client will specify a "dynamic" link for receiving the responses.
+
+        server.py -u amqp://172.30.90.124:55673 -a myqueue
+
+        client.py -a amqp://172.30.90.124:5672/myqueue
