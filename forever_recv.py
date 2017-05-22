@@ -20,35 +20,29 @@
 
 from __future__ import print_function
 import optparse
-from proton import Message
 from proton.handlers import MessagingHandler
 from proton.reactor import Container
+from proton import Url
 
-class Server(MessagingHandler):
-    def __init__(self, url, address):
-        super(Server, self).__init__()
-        self.url = url
-        self.address = address
+class Recv(MessagingHandler):
+    def __init__(self, url):
+        super(Recv, self).__init__()
+        self.url = Url(url)
+        self.received = 0
 
     def on_start(self, event):
-        print("Listening on", self.url)
-        self.container = event.container
-        self.conn = event.container.connect(self.url)
-        self.receiver = event.container.create_receiver(self.conn, self.address)
-        self.server = self.container.create_sender(self.conn, None)
+        conn = event.container.connect(self.url)
+        event.container.create_receiver(conn, self.url.path)
 
     def on_message(self, event):
-        print("Received", event.message)
-        self.server.send(Message(address=event.message.reply_to, body=event.message.body.upper(),
-                            correlation_id=event.message.correlation_id))
+        print("Message '%s' received" % event.message.body)
+        self.received += 1
 
 parser = optparse.OptionParser(usage="usage: %prog [options]")
-parser.add_option("-u", "--url", default="localhost:5672",
-                  help="host/router to connect to (default %default)")
-parser.add_option("-a", "--address", default="examples",
+parser.add_option("-a", "--address", default="localhost:5672/examples",
                   help="address from which messages are received (default %default)")
 opts, args = parser.parse_args()
 
 try:
-    Container(Server(opts.url, opts.address)).run()
+    Container(Recv(opts.address)).run()
 except KeyboardInterrupt: pass
