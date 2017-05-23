@@ -53,12 +53,12 @@ A sender which sends 10 messages to address "anycast" (direct messaging) and the
 
 A server listening for requests on the "request" address (direct messaging) and the related client sending requests on that. The client will specify a "dynamic" link for receiving the responses.
 
-        server.py -u amqp://172.30.90.124:55673 -a request
+        server.py -a amqp://172.30.90.124:55673/request
 
         client.py -a amqp://172.30.90.124:5672/request
 
 A server listening for requests on the "myqueue" address (a queue deployed on a broker) and the related client sending requests on that. The client will specify a "dynamic" link for receiving the responses.
 
-        server.py -u amqp://172.30.90.124:55673 -a myqueue
+        server.py -a amqp://172.30.90.124:55673/myqueue
 
         client.py -a amqp://172.30.90.124:5672/myqueue
