@@ -1,5 +1,14 @@
 # DevDay "Messaging as a Service" demo
 
+![meetup](images/meetup.png)
+
+This repo is used for hosting the demo showed during the "Messaging as a Service : the scalable messaging in the cloud" meetup in Naples (May 22nd) and organized by [DevDay](http://www.devday.it/) community.
+
+Following the links to the resources for this meetup :
+
+* [slides](https://www.slideshare.net/paolopat/messaging-as-a-service-building-a-scalable-messaging-service) on Slideshare
+* [video](https://www.youtube.com/watch?v=19Nw5hc8P7o) on YouTube (DevDay channel)
+
 ## Prerequisites
 
 For this demo, you need the OpenShift client tools and for that you can download the [OpenShift Origin](https://github.com/openshift/origin/releases) ones.
